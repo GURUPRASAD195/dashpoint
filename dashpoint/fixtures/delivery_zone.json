@@ -1,0 +1,29 @@
+[
+ {
+  "avg_delivery_hours": 0,
+  "description": null,
+  "docstatus": 0,
+  "doctype": "Delivery Zone",
+  "modified": "2026-09-22 18:34:40.583012",
+  "name": "North Zone",
+  "zone_name": "North Zone"
+ },
+ {
+  "avg_delivery_hours": 0,
+  "description": null,
+  "docstatus": 0,
+  "doctype": "Delivery Zone",
+  "modified": "2026-09-22 18:34:55.146036",
+  "name": "South Zone",
+  "zone_name": "South Zone"
+ },
+ {
+  "avg_delivery_hours": 0,
+  "description": null,
+  "docstatus": 0,
+  "doctype": "Delivery Zone",
+  "modified": "2026-09-22 18:35:15.789916",
+  "name": "Central Zone",
+  "zone_name": "Central Zone"
+ }
+]

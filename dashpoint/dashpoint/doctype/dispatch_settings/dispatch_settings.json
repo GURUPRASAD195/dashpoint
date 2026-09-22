@@ -1,0 +1,73 @@
+{
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "allow_rename": 1,
+ "creation": "2026-09-22 16:00:03.709359",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "dispatch_center_name",
+  "ops_manager_email",
+  "max_delivery_attempts",
+  "default_delivery_fee",
+  "low_stock_alert_enabled"
+ ],
+ "fields": [
+  {
+   "fieldname": "dispatch_center_name",
+   "fieldtype": "Data",
+   "label": "Dispatch Center Name"
+  },
+  {
+   "fieldname": "ops_manager_email",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Ops Manager Email",
+   "reqd": 1
+  },
+  {
+   "default": "3",
+   "fieldname": "max_delivery_attempts",
+   "fieldtype": "Int",
+   "label": "Max Delivery Attempts"
+  },
+  {
+   "default": "60",
+   "fieldname": "default_delivery_fee",
+   "fieldtype": "Currency",
+   "label": "Default Delivery Fee"
+  },
+  {
+   "default": "1",
+   "fieldname": "low_stock_alert_enabled",
+   "fieldtype": "Check",
+   "label": "low_stock_alert_enabled"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-09-22 16:07:12.005775",
+ "modified_by": "Administrator",
+ "module": "dashpoint",
+ "name": "Dispatch Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

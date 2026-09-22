@@ -1,0 +1,251 @@
+{
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "allow_rename": 1,
+ "autoname": "DO-.YYYY.-.#####",
+ "creation": "2026-09-22 16:11:22.558414",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_cstq",
+  "amended_from",
+  "customer_and_pickup_section",
+  "customer_name",
+  "customer_phone",
+  "customer_email",
+  "pickup_address",
+  "delivery_address",
+  "delivery_zone",
+  "package_description",
+  "assignment_and_dispatch_section",
+  "assignment_and_dispatch_column",
+  "assigned_rider",
+  "dispatch_notes",
+  "cod_amount",
+  "dispatch_date",
+  "priority",
+  "packaging_used_section",
+  "packaging_used",
+  "delivery_and_charges_section",
+  "delivery_fee",
+  "packaging_total",
+  "final_amount",
+  "payment_status",
+  "delivered_on",
+  "delivery_attempts_count",
+  "failure_reason",
+  "remarks",
+  "status"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_cstq",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Delivery Order",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "customer_and_pickup_section",
+   "fieldtype": "Section Break",
+   "label": "Customer and Pickup"
+  },
+  {
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Customer Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "customer_phone",
+   "fieldtype": "Phone",
+   "in_list_view": 1,
+   "label": "Customer Phone",
+   "reqd": 1
+  },
+  {
+   "fieldname": "customer_email",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Customer Email",
+   "options": "Email",
+   "reqd": 1
+  },
+  {
+   "fieldname": "pickup_address",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Pickup Address",
+   "reqd": 1
+  },
+  {
+   "fieldname": "delivery_address",
+   "fieldtype": "Small Text",
+   "label": "Delivery Address",
+   "reqd": 1
+  },
+  {
+   "fieldname": "delivery_zone",
+   "fieldtype": "Link",
+   "label": "Delivery Zone",
+   "options": "Delivery Zone",
+   "reqd": 1
+  },
+  {
+   "fieldname": "package_description",
+   "fieldtype": "Text Editor",
+   "label": "Package Description",
+   "reqd": 1
+  },
+  {
+   "fieldname": "assignment_and_dispatch_column",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "assigned_rider",
+   "fieldtype": "Link",
+   "label": "Assigned Rider",
+   "options": "Rider"
+  },
+  {
+   "fieldname": "assignment_and_dispatch_section",
+   "fieldtype": "Section Break",
+   "label": "Assignment and Dispatch"
+  },
+  {
+   "fieldname": "dispatch_notes",
+   "fieldtype": "Text Editor",
+   "label": "Dispatch Notes",
+   "mandatory_depends_on": "eval:doc.assigned_rider"
+  },
+  {
+   "depends_on": "eval:doc.assigned_rider",
+   "fieldname": "cod_amount",
+   "fieldtype": "Currency",
+   "label": "Cod Amount"
+  },
+  {
+   "fieldname": "dispatch_date",
+   "fieldtype": "Date",
+   "label": "Dispatch Date"
+  },
+  {
+   "default": "Standard",
+   "fieldname": "priority",
+   "fieldtype": "Select",
+   "label": "Priority",
+   "options": "Standard\nExpress\nSame-Day"
+  },
+  {
+   "fieldname": "packaging_used_section",
+   "fieldtype": "Section Break",
+   "label": "Packaging Used"
+  },
+  {
+   "fieldname": "packaging_used",
+   "fieldtype": "Table",
+   "label": "Packaging Used",
+   "options": "Packaging Usage Entry"
+  },
+  {
+   "fieldname": "delivery_and_charges_section",
+   "fieldtype": "Section Break",
+   "label": "Delivery and Charges"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "delivery_fee",
+   "fieldtype": "Currency",
+   "label": "Delivery Fee"
+  },
+  {
+   "fieldname": "packaging_total",
+   "fieldtype": "Currency",
+   "label": "Packaging Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "final_amount",
+   "fieldtype": "Currency",
+   "label": "Final Amount",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "payment_status",
+   "fieldtype": "Select",
+   "label": "Payment Status",
+   "options": "Unpaid\nPaid\nCOD Pending"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "delivered_on",
+   "fieldtype": "Datetime",
+   "label": "Delivered On"
+  },
+  {
+   "default": "0",
+   "fieldname": "delivery_attempts_count",
+   "fieldtype": "Int",
+   "label": "Delivery Attempts Count",
+   "read_only": 1
+  },
+  {
+   "fieldname": "failure_reason",
+   "fieldtype": "Select",
+   "label": "Failure Reason",
+   "mandatory_depends_on": "eval:doc.status==\"Delivery Failed\"",
+   "options": "Customer Unavailable\nWrong Address\nRefused\nOther"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nPickup Scheduled\nIn Transit\nDelivery Failed\nRe-attempt Scheduled\nDelivered\nEscalated\nCancelled"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-09-22 19:17:57.684021",
+ "modified_by": "Administrator",
+ "module": "dashpoint",
+ "name": "Delivery Order",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
