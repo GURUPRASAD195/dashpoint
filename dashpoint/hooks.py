@@ -257,4 +257,48 @@ app_license = "mit"
 # ignore_translatable_strings_from = []
 
 
-fixtures = ["Delivery Zone"]
+# fixtures = ["Delivery Zone"]
+
+# fixtures = [
+#     "Delivery Zone",
+#     "Role",
+#     "Custom DocPerm"
+# ]
+permission_query_conditions = {
+    "Delivery Order": "dashpoint.api.delivery_order_query_conditions"
+}
+
+fixtures = [
+    "Delivery Zone",
+    {
+        "dt": "Role",
+        "filters": [
+            ["name", "in", [
+                "DP Dispatch Staff",
+                "DP Rider",
+                "DP Ops Manager"
+            ]]
+        ]
+    },
+    {
+        "dt": "Custom DocPerm",
+        "filters": [
+            ["role", "in", [
+                "DP Dispatch Staff",
+                "DP Rider",
+                "DP Ops Manager"
+            ]]
+        ]
+    }
+]
+
+
+after_install = "dashpoint.install.after_install"
+
+doc_events = {
+    "*": {
+        "on_update": "dashpoint.audit.log_change",
+        "on_submit": "dashpoint.audit.log_change",
+        "on_cancel": "dashpoint.audit.log_change"
+    }
+}

@@ -14,7 +14,8 @@
   "delivery_fee",
   "packaging_total",
   "total_amount",
-  "payment_status"
+  "payment_status",
+  "amended_from"
  ],
  "fields": [
   {
@@ -66,12 +67,23 @@
    "in_list_view": 1,
    "label": "Payment Status",
    "options": "Unpaid\nPaid"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Delivery Receipt",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2026-09-22 18:30:55.239117",
+ "modified": "2026-09-23 12:47:42.712019",
  "modified_by": "Administrator",
  "module": "dashpoint",
  "name": "Delivery Receipt",
@@ -88,6 +100,20 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
+   "write": 1
+  },
+  {
+   "print": 1,
+   "read": 1,
+   "role": "DP Dispatch Staff"
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "read": 1,
+   "role": "DP Ops Manager",
+   "submit": 1,
    "write": 1
   }
  ],

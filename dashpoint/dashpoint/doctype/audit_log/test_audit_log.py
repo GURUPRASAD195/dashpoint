@@ -13,12 +13,10 @@ IGNORE_TEST_RECORD_DEPENDENCIES = []  # eg. ["User"]
 
 
 
-class IntegrationTestDeliveryOrder(IntegrationTestCase):
+class IntegrationTestAuditLog(IntegrationTestCase):
 	"""
-	Integration tests for DeliveryOrder.
+	Integration tests for AuditLog.
 	Use this class for testing interactions between multiple components.
 	"""
 
 	pass
-
-

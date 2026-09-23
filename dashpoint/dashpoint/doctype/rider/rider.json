@@ -93,7 +93,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-09-22 18:52:49.543951",
+ "modified": "2026-09-23 12:51:57.542081",
  "modified_by": "Administrator",
  "module": "dashpoint",
  "name": "Rider",
@@ -111,6 +111,22 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "read": 1,
+   "role": "DP Dispatch Staff"
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "read": 1,
+   "role": "DP Ops Manager",
+   "write": 1
+  },
+  {
+   "if_owner": 1,
+   "read": 1,
+   "role": "DP Rider"
   }
  ],
  "row_format": "Dynamic",
