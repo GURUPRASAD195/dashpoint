@@ -27,6 +27,4 @@ def create_default_delivery_zones():
 
 def create_default_dispatch_settings():
     if not frappe.db.exists("Dispatch Settings", "Dispatch Settings"):
-        frappe.get_doc({
-            "doctype": "Dispatch Settings"
-        }).insert(ignore_permissions=True)
+        frappe.get_doc({"doctype": "Dispatch Settings"}).insert(ignore_permissions=True)

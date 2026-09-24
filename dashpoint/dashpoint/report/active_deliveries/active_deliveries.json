@@ -1,0 +1,50 @@
+{
+ "add_total_row": 0,
+ "add_translate_data": 0,
+ "columns": [],
+ "creation": "2026-09-24 11:44:57.702803",
+ "disable_prepared_report_automation": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "doctype_to_sync": [],
+ "filters": [
+  {
+   "fieldname": "delivery",
+   "fieldtype": "Link",
+   "label": "delivery",
+   "mandatory": 1,
+   "options": "Delivery Zone",
+   "wildcard_filter": 0
+  }
+ ],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letter_head": null,
+ "modified": "2026-09-24 15:03:32.729596",
+ "modified_by": "Administrator",
+ "module": "dashpoint",
+ "name": "Active Deliveries",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "SELECT name, customer_name, delivery_zone, status, assigned_rider, delivery_attempts_count, creation\r\nFROM `tabDelivery Order` WHERE status NOT IN (\"Delivered\", \"Cancelled\") and delivery_zone = %(delivery)s",
+ "ref_doctype": "Delivery Order",
+ "report_name": "Active Deliveries",
+ "report_type": "Query Report",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "DP Dispatch Staff"
+  },
+  {
+   "role": "DP Rider"
+  },
+  {
+   "role": "DP Ops Manager"
+  }
+ ],
+ "snapshot_report": 0,
+ "timeout": 0
+}

@@ -8,22 +8,12 @@ class DeliveryOrder(Document):
 	def validate(self):
 		if (not self.customer_phone or not self.customer_phone.isdigit() 
 	  	or len(self.customer_phone) != 10):
-			frappe.throw(
-				"Customer phone must be exactly 10 digits."
-			)
+			frappe.throw("Customer phone must be exactly 10 digits.")
 
-		statuses_requiring_rider = [
-			"In Transit",
-			"Delivered",
-			"Delivery Failed",
-			"Re-attempt Scheduled",
-			"Escalated"
-		]
+		statuses_requiring_rider = ["In Transit", "Delivered", "Delivery Failed", "Re-attempt Scheduled", "Escalated"]
 
 		if (self.status in statuses_requiring_rider and not self.assigned_rider):
-			frappe.throw(
-				"Assigned Rider is mandatory for this status."
-			)
+			frappe.throw("Assigned Rider is mandatory for this status.")
 
 		if (self.status == "Delivery Failed" and not self.failure_reason):
 			frappe.throw("Failure Reason is mandatory when delivery has failed.")
@@ -40,10 +30,7 @@ class DeliveryOrder(Document):
 
 		if not self.delivery_fee:
 
-			self.delivery_fee = frappe.db.get_single_value(
-				"Dispatch Settings",
-				"default_delivery_fee"
-			) or 0
+			self.delivery_fee = frappe.db.get_single_value("Dispatch Settings", "default_delivery_fee") or 0
 
 		self.final_amount = ((self.packaging_total or 0) + (self.delivery_fee or 0))
 
@@ -54,21 +41,14 @@ class DeliveryOrder(Document):
 
 		for row in self.packaging_used:
 
-			stock_qty = frappe.db.get_value(
-				"Packaging Material",
-				row.material,
-				"stock_qty"
-			)
+			stock_qty = frappe.db.get_value("Packaging Material", row.material, "stock_qty")
 
 			if stock_qty is None:
 				frappe.throw(f"Packaging Material {row.material} was not found.")
 
 			
 			if stock_qty < row.quantity:
-				frappe.throw(
-					f"Insufficient stock for {row.material}. "
-					f"Available: {stock_qty}, "
-					f"Required: {row.quantity}")
+				frappe.throw(f"Insufficient stock for {row.material}. Available: {stock_qty}, Required: {row.quantity}")
 
 
 	def on_submit(self):
@@ -77,11 +57,7 @@ class DeliveryOrder(Document):
 
 		for row in self.packaging_used:
 
-			stock_qty = frappe.db.get_value(
-				"Packaging Material",
-				row.material,
-				"stock_qty"
-			)
+			stock_qty = frappe.db.get_value("Packaging Material", row.material, "stock_qty")
 
 			if stock_qty is None:
 				frappe.throw(f"Packaging Material {row.material} was not found.")
@@ -89,12 +65,7 @@ class DeliveryOrder(Document):
 			
 			new_stock_qty = stock_qty - row.quantity
 
-			frappe.db.set_value(
-				"Packaging Material",
-				row.material,
-				"stock_qty",
-				new_stock_qty
-			)
+			frappe.db.set_value("Packaging Material", row.material, "stock_qty", new_stock_qty)
 
 		receipt = frappe.get_doc({
 			"doctype": "Delivery Receipt",
@@ -114,11 +85,7 @@ class DeliveryOrder(Document):
 
 		receipt.insert(ignore_permissions=True)
 
-		frappe.enqueue(
-			"dashpoint.api.send_delivery_confirmation",
-			delivery_order_name=self.name,
-			queue="short"
-		)
+		frappe.enqueue("dashpoint.api.send_delivery_confirmation", delivery_order_name=self.name, queue="short")
 
 
 	def on_cancel(self):
@@ -128,55 +95,33 @@ class DeliveryOrder(Document):
 
 		for row in self.packaging_used:
 
-			stock_qty = frappe.db.get_value(
-				"Packaging Material",
-				row.material,
-				"stock_qty"
-			)
+			stock_qty = frappe.db.get_value("Packaging Material", row.material, "stock_qty")
 
 			if stock_qty is None:
 				continue
 
 			new_stock_qty = stock_qty + row.quantity
 
-			frappe.db.set_value(
-				"Packaging Material",
-				row.material,
-				"stock_qty",
-				new_stock_qty
-			)
+			frappe.db.set_value("Packaging Material", row.material, "stock_qty", new_stock_qty)
 
 		
-		receipt_name = frappe.db.get_value(
-			"Delivery Receipt",
-			{
-				"delivery_order": self.name
-			},
-			"name"
-		)
+		receipt_name = frappe.db.get_value("Delivery Receipt", {"delivery_order": self.name}, "name")
 		
 		if receipt_name:
 
-			receipt = frappe.get_doc(
-				"Delivery Receipt",
-				receipt_name
-			)
+			receipt = frappe.get_doc("Delivery Receipt", receipt_name)
 
 			if receipt.docstatus == 1:
 				receipt.cancel()
-
-
+    
 	def on_trash(self):
-		
-		if self.status not in [
-			"Cancelled",
-			"Draft"
-		]:
-			frappe.throw(
-				"Delivery Order cannot be deleted unless "
-				"status is Draft or Cancelled."
-			)
-
+		if self.status not in ["Cancelled", "Draft"]:
+			frappe.throw("Delivery Order cannot be deleted unless status is Draft or Cancelled.")
+   
+	def before_print(self, print_settings):
+		self.print_summary = f"{self.customer_name} - {self.delivery_zone}"
 
 	def on_update(self):
-		self.save()
+		pass
+
+	

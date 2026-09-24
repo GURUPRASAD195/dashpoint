@@ -302,3 +302,9 @@ doc_events = {
         "on_cancel": "dashpoint.audit.log_change"
     }
 }
+
+jinja = {
+    "methods": [
+        "dashpoint.jinja_methods.get_dispatch_center_name"
+    ]
+}

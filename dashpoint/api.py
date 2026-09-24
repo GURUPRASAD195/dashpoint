@@ -3,45 +3,26 @@ import frappe
 
 @frappe.whitelist()
 def share_delivery_order(delivery_order_name, user_email):
-    frappe.share.add(
-        "Delivery Order",
-        delivery_order_name,
-        user_email,
-        read=1
-    )
+    frappe.share.add("Delivery Order", delivery_order_name, user_email, read=1)
 
 def delivery_order_query_conditions(user):
     if not user:
         user = frappe.session.user
 
     if "DP Rider" in frappe.get_roles(user):
-        return """
-            `tabDelivery Order`.`assigned_rider` IN (
-                SELECT `name`
-                FROM `tabRider`
-                WHERE `user` = {user}
-            )
-        """.format(
-            user=frappe.db.escape(user)
-        )
+        return """`tabDelivery Order`.`assigned_rider` IN (SELECT `name` FROM `tabRider` WHERE `user` = {user})""".format(user=frappe.db.escape(user))
 
     return ""
 
 
 @frappe.whitelist()
 def get_delivery_orders_unsafe():
-    return frappe.get_all(
-        "Delivery Order",
-        fields=["*"]
-    )
+    return frappe.get_all("Delivery Order", fields=["*"])
 
 
 @frappe.whitelist()
 def get_delivery_orders_safe():
-    orders = frappe.get_list(
-        "Delivery Order",
-        fields=["*"]
-    )
+    orders = frappe.get_list("Delivery Order", fields=["*"])
 
     if "DP Ops Manager" not in frappe.get_roles():
         for order in orders:
@@ -58,15 +39,9 @@ from frappe.utils import now
 @frappe.whitelist()
 def record_delivery_attempt(delivery_order_name, outcome, failure_reason=None):
 	
-	delivery_order = frappe.get_doc(
-		"Delivery Order",
-		delivery_order_name
-	)
+	delivery_order = frappe.get_doc("Delivery Order", delivery_order_name)
 
-	max_attempts = frappe.db.get_single_value(
-		"Dispatch Settings",
-		"max_delivery_attempts"
-	) or 0
+	max_attempts = frappe.db.get_single_value("Dispatch Settings", "max_delivery_attempts") or 0
 
 
 	if outcome == "Failed":
@@ -97,8 +72,7 @@ def record_delivery_attempt(delivery_order_name, outcome, failure_reason=None):
 
 	delivery_order.save(ignore_permissions=True)
 
-	frappe.publish_realtime(
-		"delivery_status_changed",
+	frappe.publish_realtime("delivery_status_changed",
 		{
 			"delivery_order": delivery_order.name,
 			"status": delivery_order.status,
@@ -114,9 +88,34 @@ def record_delivery_attempt(delivery_order_name, outcome, failure_reason=None):
 
 @frappe.whitelist()
 def rename_rider(old, new):
-    return frappe.rename_doc(
-        "Rider",
-        old,
-        new,
-        merge=False
+    return frappe.rename_doc("Rider", old, new, merge=False)
+
+import frappe
+from frappe.query_builder import DocType
+from frappe.utils import add_days, now_datetime
+
+
+@frappe.whitelist()
+def get_stuck_deliveries():
+    DO = DocType("Delivery Order")
+
+    two_days_ago = add_days(now_datetime(), -2)
+
+    result = (
+        frappe.qb
+        .from_(DO)
+        .select(
+            DO.name,
+            DO.customer_name,
+            DO.assigned_rider,
+            DO.creation
+        )
+        .where(
+            (DO.status.isin(["In Transit", "Re-attempt Scheduled"]))
+            & (DO.creation < two_days_ago)
+        )
+        .orderby(DO.creation)
+        .run(as_dict=True)
     )
+
+    return result
