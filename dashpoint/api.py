@@ -1,6 +1,5 @@
 import frappe
 
-
 @frappe.whitelist()
 def share_delivery_order(delivery_order_name, user_email):
     frappe.share.add("Delivery Order", delivery_order_name, user_email, read=1)
@@ -101,21 +100,38 @@ def get_stuck_deliveries():
 
     two_days_ago = add_days(now_datetime(), -2)
 
-    result = (
-        frappe.qb
-        .from_(DO)
-        .select(
-            DO.name,
-            DO.customer_name,
-            DO.assigned_rider,
-            DO.creation
-        )
-        .where(
-            (DO.status.isin(["In Transit", "Re-attempt Scheduled"]))
-            & (DO.creation < two_days_ago)
-        )
-        .orderby(DO.creation)
-        .run(as_dict=True)
-    )
+    result = (frappe.qb.from_(DO).select(DO.name, DO.customer_name, DO.assigned_rider, DO.creation).where((DO.status.isin(["In Transit", "Re-attempt Scheduled"]))
+            & (DO.creation < two_days_ago)).orderby(DO.creation).run(as_dict=True))
 
     return result
+
+
+@frappe.whitelist(allow_guest=True)
+def get_delivery_status():
+    delivery_order_name = frappe.form_dict.get("delivery_order_name")
+
+    if not frappe.db.exists("Delivery Order", delivery_order_name):
+        frappe.local.response.http_status_code = 404
+        return {"error": "Not found"}
+
+    order = frappe.get_doc("Delivery Order", delivery_order_name)
+
+    return {
+        "status": order.status,
+        "zone": order.delivery_zone,
+        "attempts_count": order.delivery_attempts_count
+    }
+    
+    
+@frappe.whitelist()
+def reassign_zone(from_rider, to_rider):
+    try:
+        frappe.db.sql("""UPDATE `tabDelivery Order` SET assigned_rider = %s WHERE assigned_rider = %s
+            AND status NOT IN ('Delivered', 'Cancelled')""", (to_rider, from_rider))
+
+        frappe.db.commit()
+
+    except Exception as e:
+        frappe.db.rollback()
+        frappe.log_error(str(e), "Reassign Rider Error")
+        raise  

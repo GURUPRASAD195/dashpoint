@@ -35,7 +35,7 @@ frappe.ui.form.on("Delivery Order", {
         }
 
         if (frm.doc.status === "In Transit" || frm.doc.status === "Re-attempt Scheduled") {
-             frm.add_custom_button("Log Delivery Attempt", function () {
+            frm.add_custom_button("Log Delivery Attempt", function () {
 
                 let dialog = new frappe.ui.Dialog({
                     title: "Log Delivery Attempt",
@@ -59,13 +59,8 @@ frappe.ui.form.on("Delivery Order", {
 
                     primary_action(values) {
 
-                        if (
-                            values.outcome === "Failed" &&
-                            !values.failure_reason
-                        ) {
-                            frappe.msgprint(
-                                "Failure Reason is mandatory when Outcome is Failed."
-                            );
+                        if (values.outcome === "Failed" && !values.failure_reason) {
+                            frappe.msgprint("Failure Reason is mandatory when Outcome is Failed.");
                             return;
                         }
 
@@ -159,3 +154,4 @@ frappe.ui.form.on("Packaging Usage Entry", {
  
     }
 });
+

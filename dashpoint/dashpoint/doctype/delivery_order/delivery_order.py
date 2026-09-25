@@ -85,8 +85,6 @@ class DeliveryOrder(Document):
 
 		receipt.insert(ignore_permissions=True)
 
-		frappe.enqueue("dashpoint.api.send_delivery_confirmation", delivery_order_name=self.name, queue="short")
-
 
 	def on_cancel(self):
 		
